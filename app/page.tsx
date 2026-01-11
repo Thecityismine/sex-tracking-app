@@ -1,95 +1,115 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { format } from 'date-fns'
-import { createEntry, listEntries, updateEntryNote, Entry } from '@/lib/storage'
-import CalendarGrid from '@/components/CalendarGrid'
-import StatCards from '@/components/StatCards'
-import YearSummary from '@/components/YearSummary'
-import NotesPanel from '@/components/NotesPanel'
+import { useState, useEffect } from "react";
+import { format } from "date-fns";
+import {
+  createEntry,
+  deleteEntry,
+  listEntries,
+  updateEntryNote,
+  Entry,
+} from "@/lib/storage";
+import CalendarGrid from "@/components/CalendarGrid";
+import StatCards from "@/components/StatCards";
+import YearSummary from "@/components/YearSummary";
+import NotesPanel from "@/components/NotesPanel";
 
 export default function DashboardPage() {
-  const [entries, setEntries] = useState<Entry[]>([])
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [entries, setEntries] = useState<Entry[]>([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
+  const [loading, setLoading] = useState(true);
 
   // Fetch entries from local storage
   useEffect(() => {
-    fetchEntries()
-  }, [])
+    fetchEntries();
+  }, []);
 
   const fetchEntries = async () => {
     try {
-      const data = await listEntries()
-      setEntries(data)
+      const data = await listEntries();
+      setEntries(data);
     } catch (error) {
-      console.error('Error fetching entries:', error)
+      console.error("Error fetching entries:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleDateClick = async (date: Date) => {
-    const dateStr = format(date, 'yyyy-MM-dd')
-    const existingEntry = entries.find(e => e.date === dateStr)
+    const dateStr = format(date, "yyyy-MM-dd");
+    const existingEntry = entries.find((e) => e.date === dateStr);
 
     if (existingEntry) {
       // Show note editor
-      setSelectedDate(date)
-      setSelectedEntry(existingEntry)
+      setSelectedDate(date);
+      setSelectedEntry(existingEntry);
     } else {
       // Create new entry
       try {
-        await createEntry(dateStr)
-        const data = await listEntries()
-        setEntries(data)
+        await createEntry(dateStr);
+        const data = await listEntries();
+        setEntries(data);
       } catch (error) {
-        console.error('Error creating entry:', error)
+        console.error("Error creating entry:", error);
       }
     }
-  }
+  };
 
   const handleSaveNote = async (note: string) => {
-    if (!selectedDate || !selectedEntry) return
+    if (!selectedDate || !selectedEntry) return;
 
     try {
-      const updated = await updateEntryNote(selectedEntry.id, note)
-      if (!updated) return
+      const updated = await updateEntryNote(selectedEntry.id, note);
+      if (!updated) return;
 
       // Update local state
-      setEntries(entries.map(e => 
-        e.id === selectedEntry.id ? { ...e, note } : e
-      ))
+      setEntries(
+        entries.map((e) => (e.id === selectedEntry.id ? { ...e, note } : e))
+      );
 
       // Close modal
-      setSelectedDate(null)
-      setSelectedEntry(null)
+      setSelectedDate(null);
+      setSelectedEntry(null);
     } catch (error) {
-      console.error('Error saving note:', error)
+      console.error("Error saving note:", error);
     }
-  }
+  };
+
+  const handleDeleteEntry = async () => {
+    if (!selectedEntry) return;
+
+    try {
+      await deleteEntry(selectedEntry.id);
+      const data = await listEntries();
+      setEntries(data);
+      setSelectedDate(null);
+      setSelectedEntry(null);
+    } catch (error) {
+      console.error("Error deleting entry:", error);
+    }
+  };
 
   const handleCloseNote = () => {
-    setSelectedDate(null)
-    setSelectedEntry(null)
-  }
+    setSelectedDate(null);
+    setSelectedEntry(null);
+  };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-xl">Loading...</div>
       </div>
-    )
+    );
   }
 
   return (
     <main className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         <h1 className="text-3xl font-bold mb-8">Tracker</h1>
-        
+
         <CalendarGrid
           currentDate={currentDate}
           entries={entries}
@@ -110,9 +130,10 @@ export default function DashboardPage() {
           selectedDate={selectedDate}
           selectedEntry={selectedEntry}
           onSaveNote={handleSaveNote}
+          onDeleteEntry={handleDeleteEntry}
           onClose={handleCloseNote}
         />
       </div>
     </main>
-  )
+  );
 }
