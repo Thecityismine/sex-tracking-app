@@ -4,33 +4,36 @@
 
 1. Go to [https://codesandbox.io](https://codesandbox.io)
 2. Import your GitHub repo or upload the project folder
-3. Run `npm install` and `npm run dev`
-4. Share the preview URL
+3. Add Firebase env vars in sandbox settings
+4. Run `npm install` and `npm run dev`
+5. Share the preview URL
 
 ---
 
-## Notes About Storage
+## Firebase Setup Notes
 
-- This build stores data in your browser via `localStorage`.
-- Data will not sync across devices unless you add a backend later.
-- Clearing site data or using a different browser will reset entries.
+- Firestore requires rules to allow reads/writes.
+- For personal use with no auth, you can use open rules during testing.
+- Tighten rules later if you want privacy.
 
 ---
 
 ## Optional: Deploy Elsewhere
 
 This is a standard Next.js app. You can deploy it to any Next.js host (Vercel, Netlify, etc.).
-No environment variables are required.
+Remember to add Firebase env vars in your host settings.
 
 ---
 
 ## Troubleshooting
 
-### Issue: Entries disappear after refresh
+### Issue: "Missing Firebase config"
 
-**Cause:** The browser cleared site data or you opened the app in another browser/device.
+**Solution:** Verify all `NEXT_PUBLIC_FIREBASE_*` variables are set.
 
-**Solution:** Avoid clearing site data, or add a backend if you need sync.
+### Issue: "Missing or insufficient permissions"
+
+**Solution:** Update Firestore Rules to allow reads/writes.
 
 ---
 
@@ -38,5 +41,5 @@ No environment variables are required.
 
 Common resources:
 - [Next.js Docs](https://nextjs.org/docs)
+- [Firebase Docs](https://firebase.google.com/docs)
 - [CodeSandbox Docs](https://codesandbox.io/docs)
-- [Tailwind CSS Docs](https://tailwindcss.com/docs)

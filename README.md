@@ -1,28 +1,28 @@
 # Tracker App
 
-A minimal, dark-themed personal tracking web app built with Next.js, Tailwind CSS, and local browser storage.
+A minimal, dark-themed personal tracking web app built with Next.js, Tailwind CSS, and Firebase Firestore.
 
 ## Features
 
-- ƒo. Monthly calendar view with activity tracking
-- ƒo. Tap days to toggle entries on/off
-- ƒo. Red dots indicate logged days
-- ƒo. Monthly and weekly statistics
-- ƒo. Days since last activity
-- ƒo. Longest gap tracking
-- ƒo. Year summary progress bars
-- ƒo. Optional notes per entry
-- ƒo. Local persistence (per browser)
-- ƒo. Dark theme only
-- ƒo. Mobile responsive
+- Monthly calendar view with activity tracking
+- Tap days to toggle entries on/off
+- Red dots indicate logged days
+- Monthly and weekly statistics
+- Days since last activity
+- Longest gap tracking
+- Year summary progress bars
+- Optional notes per entry
+- Cloud persistence (Firestore)
+- Dark theme only
+- Mobile responsive
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14 (App Router)
-- **Styling**: Tailwind CSS
-- **Storage**: Browser `localStorage`
-- **Hosting**: CodeSandbox (or any Next.js host)
-- **Date Library**: date-fns
+- Frontend: Next.js 14 (App Router)
+- Styling: Tailwind CSS
+- Storage: Firebase Firestore
+- Hosting: CodeSandbox (or any Next.js host)
+- Date Library: date-fns
 
 ## Setup Instructions
 
@@ -38,9 +38,18 @@ cd sex-tracker-app
 npm install
 ```
 
-### 3. Storage Setup
+### 3. Firebase Setup
 
-No backend or environment variables are required. Data is stored in your browser.
+Create a Firebase project, enable Firestore, and set these environment variables:
+
+```
+NEXT_PUBLIC_FIREBASE_API_KEY=your_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+```
 
 ### 4. Run Development Server
 
@@ -54,8 +63,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 1. Go to [codesandbox.io](https://codesandbox.io)
 2. Import your GitHub repository or upload the folder
-3. Run `npm install` and `npm run dev`
-4. Share the preview URL
+3. Add the Firebase env vars in the sandbox settings
+4. Run `npm install` and `npm run dev`
+5. Share the preview URL
 
 ## Usage
 
@@ -86,46 +96,39 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ```
 sex-tracker-app/
-ƒ"oƒ"?ƒ"? app/
-ƒ",   ƒ"oƒ"?ƒ"? globals.css
-ƒ",   ƒ"oƒ"?ƒ"? layout.tsx
-ƒ",   ƒ""ƒ"?ƒ"? page.tsx
-ƒ"oƒ"?ƒ"? components/
-ƒ",   ƒ"oƒ"?ƒ"? CalendarGrid.tsx
-ƒ",   ƒ"oƒ"?ƒ"? StatCards.tsx
-ƒ",   ƒ"oƒ"?ƒ"? YearSummary.tsx
-ƒ",   ƒ""ƒ"?ƒ"? NotesPanel.tsx
-ƒ"oƒ"?ƒ"? lib/
-ƒ",   ƒ"oƒ"?ƒ"? storage.ts
-ƒ",   ƒ""ƒ"?ƒ"? calculations.ts
-ƒ"oƒ"?ƒ"? package.json
-ƒ"oƒ"?ƒ"? tsconfig.json
-ƒ"oƒ"?ƒ"? tailwind.config.js
-ƒ"oƒ"?ƒ"? postcss.config.js
-ƒ""ƒ"?ƒ"? next.config.js
+app/
+  globals.css
+  layout.tsx
+  page.tsx
+components/
+  CalendarGrid.tsx
+  StatCards.tsx
+  YearSummary.tsx
+  NotesPanel.tsx
+lib/
+  firebase.ts
+  entries.ts
+  storage.ts
+  calculations.ts
+package.json
 ```
 
 ## Color Theme
 
-- Background: `#0b0b0f`
-- Cards: `#15151c`
-- Text: `#eaeaf0`
-- Muted: `#9a9aa3`
-- Accent Red: `#ff3b3b`
-- Accent Blue: `#3b82f6`
+- Background: #0b0b0f
+- Cards: #15151c
+- Text: #eaeaf0
+- Muted: #9a9aa3
+- Accent Red: #ff3b3b
+- Accent Blue: #3b82f6
 
 ## Storage Format
 
-Entries are saved as JSON in `localStorage` under the key `tracker_entries_v1`:
+Entries are stored in Firestore under the `entries` collection with:
 
-```json
-{
-  "id": "uuid",
-  "date": "YYYY-MM-DD",
-  "created_at": "ISO timestamp",
-  "note": "optional note"
-}
-```
+- date (YYYY-MM-DD)
+- created_at (ISO timestamp)
+- note (string or null)
 
 ## Future Enhancements
 

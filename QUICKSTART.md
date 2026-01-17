@@ -8,10 +8,20 @@ Get your tracker app running in 5 minutes.
 npm install
 ```
 
-## 2. Storage Setup (no backend)
+## 2. Firebase Setup
 
-- Data is stored locally in your browser using `localStorage`.
-- No accounts or environment variables are required.
+1. Create a Firebase project
+2. Enable Firestore Database
+3. Add these environment variables in `.env.local`:
+
+```
+NEXT_PUBLIC_FIREBASE_API_KEY=your_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+```
 
 ## 3. Run Development Server
 
@@ -36,20 +46,21 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for full instructions.
 **TL;DR (CodeSandbox):**
 1. Go to [codesandbox.io](https://codesandbox.io)
 2. Import your GitHub repo or upload the folder
-3. Run `npm install` and `npm run dev`
+3. Add Firebase env vars in sandbox settings
+4. Run `npm install` and `npm run dev`
 
 ---
 
 ## What You Get
 
-バ. Monthly calendar with activity dots  
-バ. Weekly & monthly statistics  
-バ. Days since last activity  
-バ. Longest gap tracking  
-バ. Year progress summary  
-バ. Optional notes per entry  
-バ. Local persistence (per browser)  
-バ. Dark theme  
+- Monthly calendar with activity dots
+- Weekly and monthly statistics
+- Days since last activity
+- Longest gap tracking
+- Year progress summary
+- Optional notes per entry
+- Cloud persistence (Firestore)
+- Dark theme
 
 ---
 
