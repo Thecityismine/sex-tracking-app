@@ -5,7 +5,7 @@ import {
   endOfMonth, 
   eachDayOfInterval, 
   format, 
-  isSameMonth,
+  isToday,
   getDay,
   addMonths,
   subMonths
@@ -98,7 +98,11 @@ export default function CalendarGrid({
             onClick={() => onDateClick(day)}
             className="aspect-square bg-card rounded-lg hover:bg-opacity-80 transition-all relative flex items-center justify-center"
           >
-            <span className="text-lg">{format(day, 'd')}</span>
+            <span
+              className={`text-lg ${isToday(day) ? 'text-[#39ff14] font-semibold drop-shadow-[0_0_8px_rgba(57,255,20,0.85)]' : ''}`}
+            >
+              {format(day, 'd')}
+            </span>
             {hasEntry(day) && (
               <div className="absolute top-1 right-1 w-2 h-2 bg-accent-red rounded-full" />
             )}
