@@ -72,21 +72,39 @@ export function getLongestGap(entries: Entry[]): number {
 export function getYearSummary(entries: Entry[], year: number): {
   loggedDays: number
   totalDays: number
+  longestStreak: number
+  activeMonths: number
 } {
   const yearStart = startOfYear(new Date(year, 0, 1))
   const yearEnd = endOfYear(new Date(year, 0, 1))
   const today = new Date()
-  
-  const loggedDays = new Set(
-    entries
-      .filter(entry => isWithinInterval(parseISO(entry.date), { start: yearStart, end: yearEnd }))
-      .map(entry => entry.date)
-  ).size
-  
-  // Total days is either days elapsed in current year, or 365/366 for past years
-  const totalDays = year === today.getFullYear() 
+
+  const yearEntries = entries.filter(entry =>
+    isWithinInterval(parseISO(entry.date), { start: yearStart, end: yearEnd })
+  )
+
+  const uniqueDates = [...new Set(yearEntries.map(e => e.date))]
+    .map(d => parseISO(d))
+    .sort((a, b) => a.getTime() - b.getTime())
+
+  const loggedDays = uniqueDates.length
+
+  let longestStreak = uniqueDates.length > 0 ? 1 : 0
+  let currentStreak = uniqueDates.length > 0 ? 1 : 0
+  for (let i = 1; i < uniqueDates.length; i++) {
+    if (differenceInDays(uniqueDates[i], uniqueDates[i - 1]) === 1) {
+      currentStreak++
+      if (currentStreak > longestStreak) longestStreak = currentStreak
+    } else {
+      currentStreak = 1
+    }
+  }
+
+  const activeMonths = new Set(yearEntries.map(e => e.date.slice(0, 7))).size
+
+  const totalDays = year === today.getFullYear()
     ? differenceInDays(today, yearStart) + 1
     : differenceInDays(yearEnd, yearStart) + 1
-  
-  return { loggedDays, totalDays }
+
+  return { loggedDays, totalDays, longestStreak, activeMonths }
 }
