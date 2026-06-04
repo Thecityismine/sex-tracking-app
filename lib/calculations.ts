@@ -51,7 +51,7 @@ export function getDaysSinceLast(entries: Entry[]): number | null {
 }
 
 export function getLongestGap(entries: Entry[]): number {
-  const uniqueDates = [...new Set(entries.map(e => e.date))]
+  const uniqueDates = Array.from(new Set(entries.map(e => e.date)))
     .map(d => parseISO(d))
     .sort((a, b) => a.getTime() - b.getTime())
 
@@ -83,7 +83,7 @@ export function getYearSummary(entries: Entry[], year: number): {
     isWithinInterval(parseISO(entry.date), { start: yearStart, end: yearEnd })
   )
 
-  const uniqueDates = [...new Set(yearEntries.map(e => e.date))]
+  const uniqueDates = Array.from(new Set(yearEntries.map(e => e.date)))
     .map(d => parseISO(d))
     .sort((a, b) => a.getTime() - b.getTime())
 
